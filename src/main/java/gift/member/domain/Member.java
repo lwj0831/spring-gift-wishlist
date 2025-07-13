@@ -3,7 +3,8 @@ package gift.member.domain;
 import org.springframework.util.Assert;
 
 public record Member(
-    Long id, String name
+    Long id,
+    String name
 ) {
 
   public Member {
