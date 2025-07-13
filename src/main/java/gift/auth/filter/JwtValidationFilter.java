@@ -1,6 +1,7 @@
 package gift.auth.filter;
 
 import gift.auth.domain.JwtUtils;
+import gift.auth.service.TokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,13 +16,13 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
 public class JwtValidationFilter extends OncePerRequestFilter {
-
-  private final JwtUtils jwtUtils;
   private final UserDetailsService userDetailsService;
+  private final TokenService tokenService;
 
-  public JwtValidationFilter(JwtUtils jwtUtils, UserDetailsService userDetailsService) {
-    this.jwtUtils = jwtUtils;
+  public JwtValidationFilter(UserDetailsService userDetailsService,
+      TokenService tokenService) {
     this.userDetailsService = userDetailsService;
+    this.tokenService = tokenService;
   }
 
   @Override
@@ -29,10 +30,10 @@ public class JwtValidationFilter extends OncePerRequestFilter {
       FilterChain filterChain)
       throws ServletException, IOException {
 
-    String token = resolveToken(request);
+    String token = tokenService.resolveToken(request);
 
-    if (token != null && jwtUtils.validateToken(token)) {
-      String email = jwtUtils.getEmail(token);
+    if (token != null && tokenService.isValidToken(token)) {
+      String email = tokenService.getEmail(token);
       UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
       UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
@@ -42,14 +43,6 @@ public class JwtValidationFilter extends OncePerRequestFilter {
     }
 
     filterChain.doFilter(request, response);
-  }
-
-  private String resolveToken(HttpServletRequest request) {
-    String bearerToken = request.getHeader("Authorization");
-    if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-      return bearerToken.substring(7);
-    }
-    return null;
   }
 
 }
