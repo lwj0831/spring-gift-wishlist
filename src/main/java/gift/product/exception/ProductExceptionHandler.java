@@ -1,5 +1,6 @@
 package gift.product.exception;
 
+import gift.global.exception.ErrorResponseFactory;
 import gift.global.exception.dto.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,19 +17,19 @@ public class ProductExceptionHandler {
   public ResponseEntity<ErrorResponse> handleProductNotFoundException(
       ProductNotFoundException exception) {
     logger.error("Product not found: {}", exception.getMessage());
-    return ErrorResponse.createErrorResponse(exception.getErrorCode(), exception);
+    return ErrorResponseFactory.createErrorResponse(exception.getErrorCode(), exception);
   }
 
   @ExceptionHandler(InvalidProductNameException.class)
   public ResponseEntity<ErrorResponse> handleInvalidProductNameException(
       InvalidProductNameException exception) {
     logger.error("Invalid product name: {}", exception.getMessage());
-    return ErrorResponse.createErrorResponse(exception.getErrorCode(), exception);
+    return ErrorResponseFactory.createErrorResponse(exception.getErrorCode(), exception);
   }
 
   @ExceptionHandler(InvalidProductSortFieldException.class)
   public ResponseEntity<ErrorResponse> handleSortFieldException(
       InvalidProductSortFieldException exception) {
-    return ErrorResponse.createErrorResponse(exception.getErrorCode(), exception);
+    return ErrorResponseFactory.createErrorResponse(exception.getErrorCode(), exception);
   }
 }

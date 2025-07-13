@@ -1,5 +1,6 @@
 package gift.member.exception;
 
+import gift.global.exception.ErrorResponseFactory;
 import gift.global.exception.dto.ErrorResponse;
 import gift.product.exception.ProductExceptionHandler;
 import org.slf4j.Logger;
@@ -17,7 +18,7 @@ public class MemberExceptionHandler {
   public ResponseEntity<ErrorResponse> handleMemberNotFoundException(
       MemberNotFoundException exception) {
     logger.error("Member not found: {}", exception.getMessage());
-    return ErrorResponse.createErrorResponse(exception.getErrorCode());
+    return ErrorResponseFactory.createErrorResponse(exception.getErrorCode());
   }
 
 }

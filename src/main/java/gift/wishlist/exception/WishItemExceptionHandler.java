@@ -1,5 +1,6 @@
 package gift.wishlist.exception;
 
+import gift.global.exception.ErrorResponseFactory;
 import gift.global.exception.dto.ErrorResponse;
 import gift.product.exception.ProductExceptionHandler;
 import org.slf4j.Logger;
@@ -17,14 +18,14 @@ public class WishItemExceptionHandler {
   public ResponseEntity<ErrorResponse> handleWishItemNotFoundException(
       WishItemNotFoundException exception) {
     logger.error("WishItem not found: {}", exception.getMessage());
-    return ErrorResponse.createErrorResponse(exception.getErrorCode());
+    return ErrorResponseFactory.createErrorResponse(exception.getErrorCode());
   }
 
   @ExceptionHandler(WishItemAlreadyExistsException.class)
   public ResponseEntity<ErrorResponse> handleWishItemAlreadyExistsException(
       WishItemAlreadyExistsException exception) {
     logger.error("WishItem already exists: {}", exception.getMessage());
-    return ErrorResponse.createErrorResponse(exception.getErrorCode());
+    return ErrorResponseFactory.createErrorResponse(exception.getErrorCode());
   }
 
 }
