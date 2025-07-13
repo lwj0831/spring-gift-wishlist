@@ -1,6 +1,7 @@
 package gift.wishlist.repository;
 
 import gift.global.common.dto.SortInfo;
+import gift.product.dto.SimpleWishItemDto;
 import gift.wishlist.domain.WishItem;
 import gift.wishlist.dto.GetWishItemResponseDto;
 import java.util.List;
@@ -23,6 +24,19 @@ public class JdbcWishItemRepository implements WishItemRepository {
 
   private final NamedParameterJdbcTemplate jdbcTemplate;
   private final SimpleJdbcInsert jdbcInsert;
+  private static final RowMapper<WishItem> wishItemRowMapper = (rs, rowNum) ->
+      WishItem.withId(
+      rs.getLong("id"),
+      rs.getLong("member_id"),
+      rs.getLong("product_id")
+      );
+  private static final RowMapper<SimpleWishItemDto> simpleWishItemRowMapper = (rs, rowNum) ->
+      new SimpleWishItemDto(
+      rs.getLong("id"),
+      rs.getString("name"),
+      rs.getInt("price"),
+      rs.getString("image_url")
+  );
 
   @Autowired
   public JdbcWishItemRepository(DataSource dataSource) {
@@ -52,7 +66,7 @@ public class JdbcWishItemRepository implements WishItemRepository {
     String sql = "SELECT * FROM wish_item WHERE id = :id";
     try {
       Map<String, Object> params = Map.of("id", id);
-      return Optional.of(jdbcTemplate.queryForObject(sql, params, wishItemRowMapper()));
+      return Optional.of(jdbcTemplate.queryForObject(sql, params, wishItemRowMapper));
     } catch (EmptyResultDataAccessException e) {
       return Optional.empty();
     }
@@ -67,14 +81,14 @@ public class JdbcWishItemRepository implements WishItemRepository {
       MapSqlParameterSource params = new MapSqlParameterSource()
           .addValue("memberId", memberId)
           .addValue("productId", productId);
-      return Optional.of(jdbcTemplate.queryForObject(sql, params, wishItemRowMapper()));
+      return Optional.of(jdbcTemplate.queryForObject(sql, params, wishItemRowMapper));
     } catch (EmptyResultDataAccessException e) {
       return Optional.empty();
     }
   }
 
   @Override
-  public List<GetWishItemResponseDto> findWishItemsWithProductByMemberId(Long memberId) {
+  public List<SimpleWishItemDto> findWishItemsWithProductByMemberId(Long memberId) {
     Objects.requireNonNull(memberId, "회원 id는 null일 수 없습니다.");
 
     String sql = """
@@ -86,7 +100,7 @@ public class JdbcWishItemRepository implements WishItemRepository {
 
     Map<String, Object> params = Map.of("memberId", memberId);
 
-    return jdbcTemplate.query(sql, params, wishItemWithProductRowMapper());
+    return jdbcTemplate.query(sql, params, simpleWishItemRowMapper);
   }
 
   @Override
@@ -94,7 +108,7 @@ public class JdbcWishItemRepository implements WishItemRepository {
     Objects.requireNonNull(memberId, "회원 id는 null일 수 없습니다.");
     String sql = "SELECT * FROM wish_item WHERE member_id = :memberId";
     Map<String, Object> params = Map.of("memberId", memberId);
-    return jdbcTemplate.query(sql, params, wishItemRowMapper());
+    return jdbcTemplate.query(sql, params, wishItemRowMapper);
   }
 
   @Override
@@ -110,7 +124,7 @@ public class JdbcWishItemRepository implements WishItemRepository {
         .addValue("limit", pageSize + 1)
         .addValue("offset", offset);
 
-    return jdbcTemplate.query(sql, params, wishItemRowMapper());
+    return jdbcTemplate.query(sql, params, wishItemRowMapper);
   }
 
   @Override
@@ -125,22 +139,5 @@ public class JdbcWishItemRepository implements WishItemRepository {
     if (affected == 0) {
       throw new IllegalArgumentException("삭제 실패");
     }
-  }
-
-  private RowMapper<WishItem> wishItemRowMapper() {
-    return (rs, rowNum) -> WishItem.withId(
-        rs.getLong("id"),
-        rs.getLong("member_id"),
-        rs.getLong("product_id")
-    );
-  }
-
-  private RowMapper<GetWishItemResponseDto> wishItemWithProductRowMapper() {
-    return (rs, rowNum) -> new GetWishItemResponseDto(
-        rs.getLong("id"),
-        rs.getString("name"),
-        rs.getInt("price"),
-        rs.getString("image_url")
-    );
   }
 }

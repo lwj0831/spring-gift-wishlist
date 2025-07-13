@@ -17,6 +17,13 @@ import org.springframework.stereotype.Repository;
 public class JdbcMemberAuthRepository implements MemberAuthRepository {
 
   private final NamedParameterJdbcTemplate jdbcTemplate;
+  private static final RowMapper<MemberAuth> memberAuthRowMapper = (rs, rowNum) ->
+      MemberAuth.withId(
+          rs.getLong("member_id"),
+          rs.getString("email"),
+          rs.getString("password"),
+          rs.getString("refresh_token")
+      );
 
   @Autowired
   public JdbcMemberAuthRepository(DataSource dataSource) {
@@ -53,7 +60,7 @@ public class JdbcMemberAuthRepository implements MemberAuthRepository {
     String sql = "SELECT * FROM member_auth WHERE member_id = :memberId";
     try {
       Map<String, Object> params = Map.of("memberId", memberId);
-      return Optional.of(jdbcTemplate.queryForObject(sql, params, memberAuthRowMapper()));
+      return Optional.of(jdbcTemplate.queryForObject(sql, params, memberAuthRowMapper));
     } catch (EmptyResultDataAccessException e) {
       return Optional.empty();
     }
@@ -65,7 +72,7 @@ public class JdbcMemberAuthRepository implements MemberAuthRepository {
     String sql = "SELECT * FROM member_auth WHERE email = :email";
     try {
       Map<String, Object> params = Map.of("email", email);
-      return Optional.of(jdbcTemplate.queryForObject(sql, params, memberAuthRowMapper()));
+      return Optional.of(jdbcTemplate.queryForObject(sql, params, memberAuthRowMapper));
     } catch (EmptyResultDataAccessException e) {
       return Optional.empty();
     }
@@ -126,13 +133,5 @@ public class JdbcMemberAuthRepository implements MemberAuthRepository {
     }
   }
 
-  private RowMapper<MemberAuth> memberAuthRowMapper() {
-    return (rs, rowNum) -> MemberAuth.withId(
-        rs.getLong("member_id"),
-        rs.getString("email"),
-        rs.getString("password"),
-        rs.getString("refresh_token")
-    );
-  }
 
 }

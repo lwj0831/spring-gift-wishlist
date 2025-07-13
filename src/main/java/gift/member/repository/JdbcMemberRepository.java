@@ -20,6 +20,11 @@ public class JdbcMemberRepository implements MemberRepository {
 
   private final NamedParameterJdbcTemplate jdbcTemplate;
   private final SimpleJdbcInsert jdbcInsert;
+  private static final RowMapper<Member> memberRowMapper = (rs, rowNum) ->
+      Member.withId(
+      rs.getLong("id"),
+      rs.getString("name")
+  );
 
   @Autowired
   public JdbcMemberRepository(DataSource dataSource) {
@@ -49,7 +54,7 @@ public class JdbcMemberRepository implements MemberRepository {
     String sql = "SELECT * FROM member WHERE id = :id";
     try {
       Map<String, Object> params = Map.of("id", id);
-      return Optional.of(jdbcTemplate.queryForObject(sql, params, memberRowMapper()));
+      return Optional.of(jdbcTemplate.queryForObject(sql, params, memberRowMapper));
     } catch (EmptyResultDataAccessException e) {
       return Optional.empty();
     }
@@ -87,12 +92,5 @@ public class JdbcMemberRepository implements MemberRepository {
     if (affected == 0) {
       throw new IllegalArgumentException("member 삭제 실패");
     }
-  }
-
-  private RowMapper<Member> memberRowMapper() {
-    return (rs, rowNum) -> Member.withId(
-        rs.getLong("id"),
-        rs.getString("name")
-    );
   }
 }

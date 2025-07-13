@@ -19,6 +19,13 @@ public class JdbcProductRepository implements ProductRepository {
 
   private final NamedParameterJdbcTemplate jdbcTemplate;
   private final SimpleJdbcInsert jdbcInsert;
+  private static final RowMapper<Product> productRowMapper = (rs, rowNum) -> Product.withId(
+      rs.getLong("id"),
+      rs.getString("name"),
+      rs.getInt("price"),
+      rs.getString("description"),
+      rs.getString("image_url")
+  );
 
   public JdbcProductRepository(DataSource dataSource) {
     this.jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
@@ -47,7 +54,7 @@ public class JdbcProductRepository implements ProductRepository {
     String sql = "SELECT * FROM product WHERE id = :id";
     try {
       Map<String, Object> params = Map.of("id", id);
-      return Optional.of(jdbcTemplate.queryForObject(sql, params, productRowMapper()));
+      return Optional.of(jdbcTemplate.queryForObject(sql, params, productRowMapper));
     } catch (EmptyResultDataAccessException e) {
       return Optional.empty();
     }
@@ -56,7 +63,7 @@ public class JdbcProductRepository implements ProductRepository {
   @Override
   public List<Product> findAll() {
     String sql = "SELECT * FROM product";
-    return jdbcTemplate.query(sql, productRowMapper());
+    return jdbcTemplate.query(sql, productRowMapper);
   }
 
   @Override
@@ -71,7 +78,7 @@ public class JdbcProductRepository implements ProductRepository {
         .addValue("limit", pageSize + 1)
         .addValue("offset", offset);
 
-    return jdbcTemplate.query(sql, params, productRowMapper());
+    return jdbcTemplate.query(sql, params, productRowMapper);
   }
 
   @Override
@@ -109,15 +116,5 @@ public class JdbcProductRepository implements ProductRepository {
     if (affected == 0) {
       throw new IllegalArgumentException("삭제 실패");
     }
-  }
-
-  private RowMapper<Product> productRowMapper() {
-    return (rs, rowNum) -> Product.withId(
-        rs.getLong("id"),
-        rs.getString("name"),
-        rs.getInt("price"),
-        rs.getString("description"),
-        rs.getString("image_url")
-    );
   }
 }

@@ -45,7 +45,9 @@ public class WishItemService {
     if (memberRepository.findById(memberId).isEmpty()) {
       throw new IllegalArgumentException("회원이 존재하지 않습니다.");
     }
-    return wishItemRepository.findWishItemsWithProductByMemberId(memberId);
+    return wishItemRepository.findWishItemsWithProductByMemberId(memberId).stream()
+        .map(GetWishItemResponseDto::from)
+        .toList();
   }
 
   @Transactional

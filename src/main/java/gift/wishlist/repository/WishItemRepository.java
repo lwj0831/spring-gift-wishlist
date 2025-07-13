@@ -1,6 +1,7 @@
 package gift.wishlist.repository;
 
 import gift.global.common.dto.SortInfo;
+import gift.product.dto.SimpleWishItemDto;
 import gift.wishlist.domain.WishItem;
 import gift.wishlist.dto.GetWishItemResponseDto;
 import java.util.List;
@@ -14,7 +15,7 @@ public interface WishItemRepository {
 
   Optional<WishItem> findByMemberIdAndProductId(Long memberId, Long productId);
 
-  List<GetWishItemResponseDto> findWishItemsWithProductByMemberId(Long memberId);
+  List<SimpleWishItemDto> findWishItemsWithProductByMemberId(Long memberId);
 
   List<WishItem> findAllByMemberId(Long memberId);
 
