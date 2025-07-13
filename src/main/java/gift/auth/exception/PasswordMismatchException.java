@@ -1,15 +1,11 @@
 package gift.auth.exception;
 
-public class PasswordMismatchException extends RuntimeException {
+import gift.global.exception.BusinessException;
 
-  private final AuthErrorCode errorCode;
+public class PasswordMismatchException extends BusinessException {
 
   public PasswordMismatchException() {
-    super(AuthErrorCode.PASSWORD_MISMATCH.getErrorMessage());
-    errorCode = AuthErrorCode.PASSWORD_MISMATCH;
+    super(AuthErrorCode.PASSWORD_MISMATCH);
   }
 
-  public AuthErrorCode getErrorCode() {
-    return errorCode;
-  }
 }

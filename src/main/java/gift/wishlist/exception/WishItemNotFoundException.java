@@ -1,20 +1,10 @@
 package gift.wishlist.exception;
 
-public class WishItemNotFoundException extends RuntimeException {
+import gift.global.exception.BusinessException;
 
-  private final WishItemErrorCode errorCode;
+public class WishItemNotFoundException extends BusinessException {
 
   public WishItemNotFoundException() {
-    super(WishItemErrorCode.WISH_ITEM_NOT_FOUND.getErrorMessage());
-    this.errorCode = WishItemErrorCode.WISH_ITEM_NOT_FOUND;
-  }
-
-  public WishItemNotFoundException(String message) {
-    super(message);
-    this.errorCode = WishItemErrorCode.WISH_ITEM_NOT_FOUND;
-  }
-
-  public WishItemErrorCode getErrorCode() {
-    return errorCode;
+    super(WishItemErrorCode.WISH_ITEM_NOT_FOUND);
   }
 }

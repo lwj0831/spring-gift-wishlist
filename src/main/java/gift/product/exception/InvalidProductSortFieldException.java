@@ -1,16 +1,11 @@
 package gift.product.exception;
 
 
-public class InvalidProductSortFieldException extends RuntimeException {
+import gift.global.exception.BusinessException;
 
-  private final ProductErrorCode errorCode;
+public class InvalidProductSortFieldException extends BusinessException {
 
   public InvalidProductSortFieldException() {
-    super(ProductErrorCode.INVALID_SORT_FIELD_ERROR.getErrorMessage());
-    this.errorCode = ProductErrorCode.INVALID_SORT_FIELD_ERROR;
-  }
-
-  public ProductErrorCode getErrorCode() {
-    return errorCode;
+    super(ProductErrorCode.INVALID_SORT_FIELD_ERROR);
   }
 }

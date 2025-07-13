@@ -1,20 +1,11 @@
 package gift.auth.exception;
 
-public class InvalidTokenException extends RuntimeException {
+import gift.global.exception.BusinessException;
 
-  private final AuthErrorCode errorCode;
+public class InvalidTokenException extends BusinessException {
 
   public InvalidTokenException() {
-    super(AuthErrorCode.INVALID_TOKEN.getErrorMessage());
-    this.errorCode = AuthErrorCode.INVALID_TOKEN;
+    super(AuthErrorCode.INVALID_TOKEN);
   }
 
-  public InvalidTokenException(String message) {
-    super(message);
-    this.errorCode = AuthErrorCode.INVALID_TOKEN;
-  }
-
-  public AuthErrorCode getErrorCode() {
-    return errorCode;
-  }
 }

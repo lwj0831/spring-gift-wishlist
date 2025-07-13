@@ -1,15 +1,10 @@
 package gift.product.exception;
 
-public class ProductNotFoundException extends RuntimeException {
+import gift.global.exception.BusinessException;
 
-  private final ProductErrorCode errorCode;
+public class ProductNotFoundException extends BusinessException {
 
   public ProductNotFoundException() {
-    super(ProductErrorCode.PRODUCT_NOT_FOUND.getErrorMessage());
-    this.errorCode = ProductErrorCode.PRODUCT_NOT_FOUND;
-  }
-
-  public ProductErrorCode getErrorCode() {
-    return errorCode;
+    super(ProductErrorCode.PRODUCT_NOT_FOUND);
   }
 }
