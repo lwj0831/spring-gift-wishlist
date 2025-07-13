@@ -5,9 +5,9 @@ import gift.auth.domain.TokenResponse;
 public record RegisterMemberResponseDto(
     String tokenType,
     String accessToken,
-    long expiresIn,
+    long expiresInMillis,
     String refreshToken,
-    long refreshTokenExpiresIn,
+    long refreshTokenExpiresInMillis,
     Long memberId
 ) {
 

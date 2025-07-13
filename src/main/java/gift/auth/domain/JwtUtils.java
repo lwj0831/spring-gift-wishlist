@@ -13,15 +13,15 @@ public class JwtUtils {
 
   private final JwtProperties jwtProperties;
   private final SecretKey key;
-  private final long ACCESS_TOKEN_VALIDITY;
-  private final long REFRESH_TOKEN_VALIDITY;
+  private final long ACCESS_TOKEN_VALIDITY_MILLIS;
+  private final long REFRESH_TOKEN_VALIDITY_MILLIS;
   private final String ISSUER;
 
   public JwtUtils(JwtProperties jwtProperties) {
     this.jwtProperties = jwtProperties;
     this.key = Keys.hmacShaKeyFor(jwtProperties.secretKey().getBytes());
-    this.ACCESS_TOKEN_VALIDITY = jwtProperties.accessTokenValidity();
-    this.REFRESH_TOKEN_VALIDITY = jwtProperties.refreshTokenValidity();
+    this.ACCESS_TOKEN_VALIDITY_MILLIS = jwtProperties.accessTokenValidity();
+    this.REFRESH_TOKEN_VALIDITY_MILLIS = jwtProperties.refreshTokenValidity();
     this.ISSUER = jwtProperties.issuer();
   }
 
@@ -32,7 +32,7 @@ public class JwtUtils {
         .build();
 
     Date now = new Date();
-    Date expiredAt = new Date(now.getTime() + ACCESS_TOKEN_VALIDITY);
+    Date expiredAt = new Date(now.getTime() + ACCESS_TOKEN_VALIDITY_MILLIS);
 
     return Jwts.builder()
         .issuer(ISSUER)
@@ -46,7 +46,7 @@ public class JwtUtils {
 
   public String createRefreshToken(Long userId) {
     Date now = new Date();
-    Date expiredDate = new Date(now.getTime() + REFRESH_TOKEN_VALIDITY);
+    Date expiredDate = new Date(now.getTime() + REFRESH_TOKEN_VALIDITY_MILLIS);
 
     return Jwts.builder()
         .issuer(ISSUER)
@@ -90,11 +90,11 @@ public class JwtUtils {
   }
 
   public long getAccessTokenExpirationTime() {
-    return ACCESS_TOKEN_VALIDITY / 1000;
+    return ACCESS_TOKEN_VALIDITY_MILLIS / 1000;
   }
 
   public long getRefreshTokenExpirationTime() {
-    return REFRESH_TOKEN_VALIDITY / 1000;
+    return REFRESH_TOKEN_VALIDITY_MILLIS / 1000;
   }
 
 }
