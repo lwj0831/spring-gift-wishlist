@@ -22,9 +22,9 @@ public class JdbcMemberRepository implements MemberRepository {
   private final SimpleJdbcInsert jdbcInsert;
   private static final RowMapper<Member> memberRowMapper = (rs, rowNum) ->
       Member.withId(
-      rs.getLong("id"),
-      rs.getString("name")
-  );
+          rs.getLong("id"),
+          rs.getString("name")
+      );
 
   @Autowired
   public JdbcMemberRepository(DataSource dataSource) {

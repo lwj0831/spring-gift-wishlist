@@ -3,7 +3,6 @@ package gift.wishlist.repository;
 import gift.global.common.dto.SortInfo;
 import gift.product.dto.SimpleWishItemDto;
 import gift.wishlist.domain.WishItem;
-import gift.wishlist.dto.GetWishItemResponseDto;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -26,17 +25,17 @@ public class JdbcWishItemRepository implements WishItemRepository {
   private final SimpleJdbcInsert jdbcInsert;
   private static final RowMapper<WishItem> wishItemRowMapper = (rs, rowNum) ->
       WishItem.withId(
-      rs.getLong("id"),
-      rs.getLong("member_id"),
-      rs.getLong("product_id")
+          rs.getLong("id"),
+          rs.getLong("member_id"),
+          rs.getLong("product_id")
       );
   private static final RowMapper<SimpleWishItemDto> simpleWishItemRowMapper = (rs, rowNum) ->
       new SimpleWishItemDto(
-      rs.getLong("id"),
-      rs.getString("name"),
-      rs.getInt("price"),
-      rs.getString("image_url")
-  );
+          rs.getLong("id"),
+          rs.getString("name"),
+          rs.getInt("price"),
+          rs.getString("image_url")
+      );
 
   @Autowired
   public JdbcWishItemRepository(DataSource dataSource) {
