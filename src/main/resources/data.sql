@@ -11,7 +11,7 @@ INSERT INTO member (id, name) VALUES (100, 'kim');
 INSERT INTO member (id, name) VALUES (101, 'park');
 
 INSERT INTO member_auth (member_id, email, password, refresh_token)
-VALUES (100, 'kim@example.com', '$2a$10$C9fK7K1QZUXmCqZsMR8VdupxCBFe2g7kWyWeLb9bPP1WjAzBtHSSK', 'abcd');
+VALUES (100, 'wjl0831@gmail.com', '$2a$10$C9fK7K1QZUXmCqZsMR8VdupxCBFe2g7kWyWeLb9bPP1WjAzBtHSSK', 'abcd');
 INSERT INTO member_auth (member_id, email, password, refresh_token)
 VALUES (200, 'park@example.com', '$2a$10$7jxHkc3x2P8ZbmHcDxOXke95hWuHx6cLG3axrGgVqLEK3KLS/ZUQ6', 'abcd');
 
