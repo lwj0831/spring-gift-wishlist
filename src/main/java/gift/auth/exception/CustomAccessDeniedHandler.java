@@ -5,6 +5,8 @@ import gift.global.exception.dto.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Component;
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
   private final ObjectMapper objectMapper;
+  private static final Logger logger = LoggerFactory.getLogger(CustomAccessDeniedHandler.class);
 
   public CustomAccessDeniedHandler(ObjectMapper objectMapper) {
     this.objectMapper = objectMapper;
@@ -23,7 +26,8 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
   @Override
   public void handle(HttpServletRequest request, HttpServletResponse response,
       AccessDeniedException accessDeniedException) throws IOException {
-
+    logger.error("Authorization exception occurs: {}", accessDeniedException.getMessage(),
+        accessDeniedException);
     ErrorResponse errorResponse = ErrorResponse.from(AuthErrorCode.FORBIDDEN);
 
     response.setStatus(HttpStatus.FORBIDDEN.value());

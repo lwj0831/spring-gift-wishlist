@@ -5,6 +5,8 @@ import gift.global.exception.dto.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -17,6 +19,8 @@ import org.springframework.stereotype.Component;
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
   private final ObjectMapper objectMapper;
+  private static final Logger logger = LoggerFactory.getLogger(
+      CustomAuthenticationEntryPoint.class);
 
   public CustomAuthenticationEntryPoint(ObjectMapper objectMapper) {
     this.objectMapper = objectMapper;
@@ -25,7 +29,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
   @Override
   public void commence(HttpServletRequest request, HttpServletResponse response,
       AuthenticationException authException) throws IOException {
-
+    logger.error("AuthenticationException occurs: {}", authException.getMessage(), authException);
     ErrorResponse errorResponse = determineErrorResponse(authException);
 
     response.setStatus(HttpStatus.UNAUTHORIZED.value());

@@ -17,7 +17,7 @@ public class MemberExceptionHandler {
   @ExceptionHandler(MemberNotFoundException.class)
   public ResponseEntity<ErrorResponse> handleMemberNotFoundException(
       MemberNotFoundException exception) {
-    logger.error("Member not found: {}", exception.getMessage());
+    logger.error("Member not found: {}", exception.getMessage(), exception);
     return ErrorResponseFactory.createErrorResponse(exception.getErrorCode());
   }
 
