@@ -34,8 +34,7 @@ public class ProductService {
   }
 
   public GetProductResponseDto getProductById(Long id) throws ProductNotFoundException {
-    Product product = productRepository.findById(id)
-        .orElseThrow(ProductNotFoundException::new);
+    Product product = findProductOrThrow(id);
     return GetProductResponseDto.from(product);
   }
 
@@ -54,9 +53,7 @@ public class ProductService {
   @Transactional
   public void updateProduct(Long id, UpdateProductRequestDto dto) throws ProductNotFoundException {
     productValidator.validateProductName(dto.name());
-    if (productRepository.findById(id).isEmpty()) {
-      throw new ProductNotFoundException();
-    }
+    findProductOrThrow(id);
     Product newProduct = Product.withId(
         id,
         dto.name(),
@@ -69,9 +66,11 @@ public class ProductService {
 
   @Transactional
   public void deleteProduct(Long id) throws ProductNotFoundException {
-    if (productRepository.findById(id).isEmpty()) {
-      throw new ProductNotFoundException();
-    }
+    findProductOrThrow(id);
     productRepository.deleteById(id);
+  }
+
+  public Product findProductOrThrow(Long productId) {
+    return productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
   }
 }

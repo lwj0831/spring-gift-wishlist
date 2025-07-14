@@ -1,6 +1,5 @@
 package gift.auth.filter;
 
-import gift.auth.domain.JwtUtils;
 import gift.auth.service.TokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -16,6 +15,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
 public class JwtValidationFilter extends OncePerRequestFilter {
+
   private final UserDetailsService userDetailsService;
   private final TokenService tokenService;
 
