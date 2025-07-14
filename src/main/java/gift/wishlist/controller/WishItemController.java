@@ -5,6 +5,7 @@ import gift.wishlist.dto.GetWishItemResponseDto;
 import gift.wishlist.dto.RegisterWishItemRequestDto;
 import gift.wishlist.service.WishItemService;
 import jakarta.validation.Valid;
+import java.net.URI;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,8 +35,9 @@ public class WishItemController {
   @PostMapping
   public ResponseEntity<Void> addWishItem(@LoginUser Long memberId,
       @Valid @RequestBody RegisterWishItemRequestDto dto) {
-    wishItemService.registerWishItem(memberId, dto);
-    return ResponseEntity.ok().build();
+    Long id = wishItemService.registerWishItem(memberId, dto);
+    URI uri = URI.create("/api/wish-items" + id);
+    return ResponseEntity.created(uri).build();
   }
 
   @DeleteMapping("/{wishItemId}")
