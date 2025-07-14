@@ -19,7 +19,7 @@ public class ProductSortStrategyFactory {
       throws InvalidProductSortFieldException {
     SortStrategy<Product> strategy = strategyMap.get(sortField);
     if (strategy == null) {
-      throw new InvalidProductSortFieldException();
+      throw new InvalidProductSortFieldException("정렬 필드 값이 올바르지 않습니다");
     }
     return strategy;
   }

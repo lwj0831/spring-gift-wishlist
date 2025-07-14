@@ -1,6 +1,8 @@
 package gift.product.e2e;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.global.exception.dto.ErrorResponse;
@@ -96,13 +98,12 @@ class ProductApiStructuredE2ETest {
           return ResponseEntity.status(res.getStatusCode()).headers(res.getHeaders()).body(body);
         });
 
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-
     ObjectMapper mapper = new ObjectMapper();
     ErrorResponse errorResponse = mapper.readValue(response.getBody(), ErrorResponse.class);
 
-    assertThat(errorResponse.errorCode()).isEqualTo("PRODUCT-003");
-    assertThat(errorResponse.errorMessage()).contains("정렬 필드 값이 올바르지 않습니다");
+    assertAll(()->assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST),
+        ()->assertThat(errorResponse.errorCode()).isEqualTo("PRODUCT-003"),
+        ()->assertThat(errorResponse.errorMessage()).contains("정렬 필드 값이 올바르지 않습니다"));
   }
 
 
